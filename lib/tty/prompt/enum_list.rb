@@ -149,6 +149,13 @@ module TTY
           mark_choice_as_active
         elsif event.value =~ /^\d+$/
           @input += event.value
+
+          # safeguard RangeError on array access
+          if @input.to_i > 2**([''].pack('p').size * 8 - 1)
+            @input.chop!
+            @failure = true
+          end
+
           mark_choice_as_active
         end
       end
